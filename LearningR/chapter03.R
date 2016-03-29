@@ -52,6 +52,89 @@ is.list(list(a=1,b='time'))
 # 可以使用ls函数查看所有is函数，实证是正则表达式匹配
 ls(pattern='^is',baseenv())
 
+is.numeric(1)
+is.numeric(1L)
+is.integer(1)
+is.integer(1L)
+is.double(1)
+is.double(1L)
+
+# 类型转换函数as，大部分类型都有自己的as.*函数，可以直接调用
+x <- '123.456'
+as(x,'numeric')
+as.numeric(x)
+
+# 可以使用options(digits=n)来设置小数点保留位数
+
+# 检查变量
+
+# 在命令行模式下，输入运算或变量时隐式调用print函数
+# 但是在内循环或函数中，隐式调用不起作用，必须显式调用print函数
+
+ulams_spiral <- c(1,8,23,46,77)
+for (i in ulams_spiral) i
+for (i in ulams_spiral) print(i)
+
+# summary函数可以为不同的数据类型提供汇总信息
+num <- runif(30)
+summary(num)
+
+# dunif(x, min = 0, max = 1, log = FALSE)
+# punif(q, min = 0, max = 1, lower.tail = TRUE, log.p = FALSE)
+# qunif(p, min = 0, max = 1, lower.tail = TRUE, log.p = FALSE)
+# runif(n, min = 0, max = 1)
+# These functions provide information about the uniform distribution on the interval from min to max. 
+# dunif gives the density, punif gives the distribution function qunif gives the quantile function,runif generates random deviates.
+
+# 类别变量和逻辑向量都可以进行汇总信息,多维对象，矩阵，数据框也可以通过summary汇总
+# letters,LETTERS分别是内置的常数，包括了小写和大写的26个英文字母
+fac <- factor(sample(letters[1:5],30,replace=TRUE))
+summary(fac)
+
+bool <- sample(c(TRUE,FALSE,NA),30,replace=TRUE)
+summary(bool)
+
+dfr <- data.frame(num,fac,bool)
+head(dfr)
+summary(dfr)
+# head函数可以显示前几行
+
+# str可以显示对象的结构，
+str(num)
+str(dfr)
+
+# 每个类都有自己的print方法，以此来控制如何显示到控制台，但是这可能会导致忽略其内部结构
+# 可以调用unclass函数来显示变量的结构
+
+unclass(fac)
+
+# attributes函数可以显示当前对象的所有属性列表
+attributes(fac)
+
+# 可以使用View函数查看矩阵、数据框等二维变量，edit，fix函数可以修改数据
+
+View(dfr)
+new_dfr <- edit(dfr)
+fix(dfr)
+
+View(head(dfr,50))
+
+# 工作区
+
+# 可以使用ls()列出所有变量名
+peach <- 1
+plum <- 'fruity'
+pear <- TRUE
+ls()
+
+ls(pattern='ea')
+
+# 可以使用rm()删除变量
+rm(peach,plum,pear)
+rm(list=ls())
+
+
+
 
 
 
