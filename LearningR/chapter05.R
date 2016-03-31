@@ -154,9 +154,70 @@ data.frame(
   z=runif(5)>0.5,
   row.names=c('jackie','tito','jermaine','marlon','micheal'))
 
+rownames(a_data_frame)
+colnames(a_data_frame)
+dimnames(a_data_frame)
+nrow(a_data_frame)
+ncol(a_data_frame)
+dim(a_data_frame)
 
 
 
+# 可以使用不同长度的向量来创建数据框，只要较短的向量能刚好循环至总长度，否则引发错误
+data.frame(
+  x=1,
+  y=2:3,
+  z=4:7)
+
+data.frame(
+  x=1,
+  y=2:3,
+  z=4:6)
+
+# 默认情况下，列名必须是合法的变量名，可以通过check.names=FALSE关闭
+data.frame(
+  'a column'=letters[1:5],
+  '!@#$%&*()'=rnorm(5),
+  '...'=runif(5)>0.5,
+  check.names=FALSE
+  )
+
+# 索引数据框
+a_data_frame[2:3,-3]
+a_data_frame[c(FALSE,TRUE,TRUE,FALSE,FALSE),c('x','y')]
+class(a_data_frame[2:3,-3])
+class(a_data_frame[2:3,1])
+
+a_data_frame$x
+a_data_frame$x[2:3]
+a_data_frame[[1]][2:3]
+a_data_frame[['x']][2:3]
+
+# 使用subset可以得到一个新的数据框子集，
+a_data_frame[a_data_frame$y >0 | a_data_frame$z,'x']
+
+subset(a_data_frame,y>0|z,x)
+
+# 数据框的基本操作
+
+# 可以使用t函数进行转置，
+# 也可以使用rbind,cbind对大小一致的数据框进行拼接，
+# rbind可以智能地对列重新排序以匹配，
+# cbind不会对列名做重复性检查，可能会出现问题,当两个数据框有相同的列时， merge函数会使用两个数据框中所有共同的列，可以使用merge函数进行合并，传入by参数指定共享的列
+#
+# 
+t(a_data_frame)
+
+another_data_frame <- data.frame(
+  z=rlnorm(5),
+  y=sample(5),
+  x=letters[3:7]
+  )
+rbind(a_data_frame,another_data_frame)
+cbind(a_data_frame,another_data_frame)
+merge(a_data_frame,another_data_frame)
+merge(a_data_frame,another_data_frame,by='x')
+merge(a_data_frame,another_data_frame,by='x',all=TRUE)
 
 
 
