@@ -1,1 +1,1 @@
-the code is for the book:learning R
+The code is for the book:learning R£¬Richard Cotton,O'Reilly Press
