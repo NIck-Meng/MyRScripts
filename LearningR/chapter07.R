@@ -87,6 +87,58 @@ basename(file_name)
 dirname(file_name)
 
 
+# 因子
+# 创建数据框时，字符串被自动转换成因子
+heights <- data.frame(
+  height_cm=c(153,182,179,181,167,191,159,186,158,177),
+  gender=c('female','male','female','male','female',
+           'male','female','female','female','male')
+  )
+class(heights$gender)
+heights$gender
+
+# 也可以用factor函数创建因子,其第一个参数是一个字符向量，
+
+gender_char <- c('female','male','female','male','female',
+                 'male','female','female','female','male')
+(gender_fac <- factor(gender_char))
+
+# 更改因子水平
+
+(gender_fac <- factor(gender_char,levels=c('male','female')))
+
+# 去掉因子水平
+
+getting_to_work <- data.frame(
+  mode=c('bike','car','bus','car','walk',
+         'bike','car','bike','car','car'),
+  time_mins=c(25,13,NA,22,65,28,15,24,NA,14))
+
+(getting_to_work <- subset(getting_to_work,!is.na(time_mins)))
+
+getting_to_work$mode <- droplevels(getting_to_work$mode)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
