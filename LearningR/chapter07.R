@@ -120,24 +120,31 @@ getting_to_work$mode <- droplevels(getting_to_work$mode)
 
 
 
+# 有序因子
+
+happy_choices <- c('depressed','grumpy','so-so','cheery','ecstatic')
+
+happy_values <- sample(happy_choices,10000,replace=T)
 
 
+happy_fac <- factor(happy_values)
+head(happy_fac)
 
 
+# ordered函数可以给因子排序
+happy_ord <- ordered(happy_values,happy_choices)
+head(happy_ord)
+
+is.factor(happy_ord)
+is.ordered(happy_fac)
 
 
+# 将连续变量转换成类型
+ages<- 16+ 50*rbeta(10000,2,3)
+grouped_ages <- cut(ages,seq.int(16,66,10))
+head(grouped_ages)
 
-
-
-
-
-
-
-
-
-
-
-
+table(grouped_ages)
 
 
 
