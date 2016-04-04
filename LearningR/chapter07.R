@@ -146,8 +146,27 @@ head(grouped_ages)
 
 table(grouped_ages)
 
+# 把类型变量转换成连续变量
 
+dirty <- data.frame(
+  x=c('1.23','4..56','7.89'))
+# 先把因子转换成字符，然后再转换成数字
+as.numeric(as.character(dirty$x))
 
+as.numeric(levels(dirty$x))[as.integer(dirty$x)]
 
+# 生成因子水平
 
+gl(3,2)
+gl(3,2,labels=c('placebo','drug a','drug b'))
+gl(3,1,6,labels=c('placebo','drug a','drug b'))
 
+# gl(n, k, length = n*k, labels = seq_len(n), ordered = FALSE)
+# n  an integer giving the number of levels.
+# k	 an integer giving the number of replications.
+
+# 合并因子
+
+treatment <- gl(3,2,labels=c('placebo','drug a','drug b'))
+gender <- gl(2,1,6,labels=c('female','male'))
+interaction(treatment,gender)
