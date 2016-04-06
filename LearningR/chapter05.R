@@ -193,7 +193,7 @@ a_data_frame$x[2:3]
 a_data_frame[[1]][2:3]
 a_data_frame[['x']][2:3]
 
-# 使用subset可以得到一个新的数据框子集，
+# 使用subset可以得到一个新的数据框子集，传入数据框，行条件逻辑向量，保留名字向量
 a_data_frame[a_data_frame$y >0 | a_data_frame$z,'x']
 
 subset(a_data_frame,y>0|z,x)
@@ -218,8 +218,6 @@ cbind(a_data_frame,another_data_frame)
 merge(a_data_frame,another_data_frame)
 merge(a_data_frame,another_data_frame,by='x')
 merge(a_data_frame,another_data_frame,by='x',all=TRUE)
-
-
 
 
 
