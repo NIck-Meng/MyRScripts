@@ -64,6 +64,50 @@ write.csv(crab_lifetime_notebook,'C:/Program Files/R/R-3.2.4revised/library/lear
 
 # 非结构化文本文件
 
+# readLines方法可以读入所有文本行，writeLines可以将文本写入文件
+text_file <- system.file(
+  'extdata',
+  'Shakespeare.s.The.Tempest..from.Project.Gutenberg.pg2235.txt',
+  package='learningr'
+)
+the_tempest <- readLines(text_file)
+the_tempest[1:2]
+the_tempest[1926:1927]
+
+writeLines(rev(text_file),'Shakespeare.s.The.Tempest..from.Project.Gutenberg.pg2235.txt')
+
+# 解析XML和HTML文件
+library(XML)
+xml_file <- system.file('extdata','options.xml',package='learningr')
+r_options <- xmlParse(xml_file)
+# XPath是查询XML文档的语言
+xpathSApply(r_options,"//variable[contains(@name,'warn')]")
+
+# 同理，htmlParse和htmlTreeParse用于HTML页面导入，
+# XML格式在序列化对象时非常有用，可以使用Runiversal包中的makexml函数完成序列化，
+
+install.packages('Runiversal')
+library(Runiversal)
+ops <- as.list(options())
+cat(makexml(ops),file='options.xml')
+
+
+################################# 读取二进制文件
+# 读取excel文件
+install.packages('xlsx')
+library(xlsx)
+library(rJava)
+
+bike <- system.file('extdata',"Alpe.d.Huez.xls",package='learningr')
+bike_data <- read.xlsx2(
+  bike_file,
+  sheetIndex=1,
+  startRow=2,
+  endRow=38,
+  colIndex=2,
+  colClasses=c('character','numeric','character','integer','character','character','character')
+  )
+
 
 
 
