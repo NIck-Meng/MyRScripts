@@ -1,3 +1,3 @@
 #this repo contains my private code for this two books:
-*learning R 
-*R in Action
+*1 learning R 
+*2 R in Action
