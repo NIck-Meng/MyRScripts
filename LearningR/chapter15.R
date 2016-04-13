@@ -27,7 +27,9 @@ runif(5)
 # 对于回归模型，默认具有截距项，公式中添加0就可以取消截距项
 # 当变量有幂运算时，需要使用I()函数
 
-# 线性回归模型
+################################################ 线性回归模型
+
+# 在R中，拟合线性模型的最基本函数就是lm()函数，
 
 data(gonorrhoea,package='learningr')
 head(gonorrhoea,10)
@@ -105,8 +107,183 @@ new_data <- data.frame(
 predict(model4,new_data)
 
 
+#OLS回归
+
+# 简单线性回归
+fit <- lm(weight ~ height, data = women)
+summary(fit)
+women$weight
+fitted(fit)
+residuals(fit)
+# scatter plot of height by weight
+
+plot(women$height, women$weight, main = "Women Age 30-39", 
+     xlab = "Height (in inches)", ylab = "Weight (in pounds)")
+# add the line of best fit
+abline(fit)
+
+# 多项式回归
+# Listing 8.2 - Polynomial regression
+
+fit2 <- lm(weight ~ height + I(height^2), data = women)
+summary(fit2)
+
+plot(women$height, women$weight, main = "Women Age 30-39", 
+     xlab = "Height (in inches)", ylab = "Weight (in lbs)")
+lines(women$height, fitted(fit2))
+
+# scatterplot for women data
+
+library(car)
+scatterplot(weight ~ height, data = women, spread = FALSE, 
+            lty.smooth = 2, pch = 19, main = "Women Age 30-39", xlab = "Height (inches)", 
+            ylab = "Weight (lbs.)")
+
+
+# 多元线性回归
+# Listing 8.3 - Examining bivariate relationship
+
+states <- as.data.frame(state.x77[, c("Murder", "Population", 
+                                      "Illiteracy", "Income", "Frost")])
+
+cor(states)
+
+library(car)
+scatterplotMatrix(states, spread = FALSE, lty.smooth = 2, 
+                  main = "Scatterplot Matrix")
+
+
+# Listing 8.4 - Multiple linear regression
+
+fit <- lm(Murder ~ Population + Illiteracy + Income + 
+            Frost, data = states)
+summary(fit)
+
+
+# 有交互项的多元线性回归
+
+# Listing 8.5 Multiple linear regression with a significant
+# interaction term
+
+fit <- lm(mpg ~ hp + wt + hp:wt, data = mtcars)
+summary(fit)
+
+install.packages('effects')
+library(effects)
+plot(effect("hp:wt", fit, list(wt = c(2.2, 3.2, 4.2))), 
+     multiline = TRUE)
+
+
+
 # 广义线性模型
-# glm函数，可以为因变量的误差项和变换指定不同的分布
+# 在一般线性模型中，假设因变量服从正态分布，但是很多情况下，这个假设并不合理
+# 1，因变量可能是类别型的，比如probit和Logit模型，2，因变量可能是计数型的，这类变量是非负值的
+# 广义线性模型扩展了一般线性模型，包含了非正态分布因变量的分析
+# 在R中，glm函数可以拟合广义线性模型
+
+sapply(c('AER','robust','qcc'),install.packages)
+
+# --Logistic Regression--
+
+# get summary statistics
+data(package='AER')
+data(Affairs, package = "AER")
+summary(Affairs)
+table(Affairs$affairs)
+
+# create binary outcome variable
+Affairs$ynaffair[Affairs$affairs > 0] <- 1
+Affairs$ynaffair[Affairs$affairs == 0] <- 0
+
+Affairs$ynaffair <- factor(Affairs$ynaffair, levels = c(0, 1), labels = c("No", "Yes"))
+table(Affairs$ynaffair)
+
+# fit full model
+fit.full <- glm(ynaffair ~ gender + age + yearsmarried + 
+                  children + religiousness + education + occupation + rating, 
+                data = Affairs, family = binomial())
+summary(fit.full)
+
+# fit reduced model
+fit.reduced <- glm(ynaffair ~ age + yearsmarried + 
+                     religiousness + rating, data = Affairs, family = binomial())
+summary(fit.reduced)
+
+# compare models
+anova(fit.reduced, fit.full, test = "Chisq")
+
+# interpret coefficients
+coef(fit.reduced)
+exp(coef(fit.reduced))
+
+# calculate probability of extramariatal affair by marital ratings
+testdata <- data.frame(rating = c(1, 2, 3, 4, 5), 
+                       age = mean(Affairs$age), yearsmarried = mean(Affairs$yearsmarried), 
+                       religiousness = mean(Affairs$religiousness))
+testdata$prob <- predict(fit.reduced, newdata = testdata, 
+                         type = "response")
+testdata
+
+
+# calculate probabilites of extramariatal affair by age
+testdata <- data.frame(rating = mean(Affairs$rating), 
+                       age = seq(17, 57, 10), yearsmarried = mean(Affairs$yearsmarried), 
+                       religiousness = mean(Affairs$religiousness))
+testdata$prob <- predict(fit.reduced, newdata = testdata, 
+                         type = "response")
+testdata
+
+
+
+# evaluate overdispersion
+fit <- glm(ynaffair ~ age + yearsmarried + religiousness + 
+             rating, family = binomial(), data = Affairs)
+fit.od <- glm(ynaffair ~ age + yearsmarried + religiousness + 
+                rating, family = quasibinomial(), data = Affairs)
+pchisq(summary(fit.od)$dispersion * fit$df.residual, 
+       fit$df.residual, lower = F)
+
+# --Poisson Regression--
+
+# look at dataset
+data(breslow.dat, package = "robust")
+names(breslow.dat)
+summary(breslow.dat[c(6, 7, 8, 10)])
+
+# fit regression
+fit <- glm(sumY ~ Base + Age + Trt, data = breslow.dat, 
+           family = poisson())
+summary(fit)
+
+# interpret model parameters
+coef(fit)
+exp(coef(fit))
+
+# 过度离势 overdispersion
+
+
+# 泊松分布的方差和期望相等，当因变量观测值得方差比比依据泊松分布预测的方差大时，泊松回归可能发生过度离势
+# 由于计数型变量经常发生过度离势，且过度离势会对结果的解释发生负面影响，
+# Residual deviance:  559.44  on 55  degrees of freedom
+# 残差偏差/自由度=10.17>>1 故存在过度离势
+# qcc包可以检验过度离势
+# 
+library(qcc)
+qcc.overdispersion.test(breslow.dat$sumY, type = "poisson")
+# P值远远小于0.05，可见存在过度离势
+
+# fit model with quasipoisson
+fit.od <- glm(sumY ~ Base + Age + Trt, data = breslow.dat, 
+              family = quasipoisson())
+summary(fit.od)
+
+
+
+
+
+
+
+
 
 
 
