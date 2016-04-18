@@ -45,17 +45,20 @@ marginplot(sleep[c("Gest", "Dream")], pch = c(20),
 
 # 
 # use correlations to explore missing values
+
+# 影子矩阵：用指示变量替代数据集中的数据，比如用1表示缺失,0表示存在
+
 x <- as.data.frame(abs(is.na(sleep)))
 head(sleep, n=5)
 head(x, n=5)
-y <- x[which(sd(x) > 0)]
+y <- x[which(sd(x) > 0),]
 cor(y)
 cor(sleep, y, use = "pairwise.complete.obs")
 
 
 
-
-
+hh <- data.frame(a=c(1,2,3),b=c(4,5,6),c=c(7,8,9))
+hh[which(sd(hh)>0)]
 
 
 
