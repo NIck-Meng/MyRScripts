@@ -115,15 +115,48 @@ qplot(carat,data=diamonds,geom='histogram',fill=color)
 qplot(color,data=diamonds,geom='bar')
 qplot(color,data=diamonds,geom='bar',weight=carat)+scale_y_continuous('carat')
 
-# 2.5.5
+# 2.5.5时间序列中的线条图和路径图
+
+# 线条图展示了单个变量随着时间变化的情况
+# 路径图展示了两个变量随时间联动的情况，时间反映在点的顺序上。
+qplot(date,unemploy/pop,data=economics,geom='line')
+qplot(date,uempmed,data=economics,geom='line')
+
+year <- function(x) as.POSIXlt(x)$year+1900
+
+qplot(unemploy/pop,uempmed,data=economics,geom=c('point','path'))
+qplot(unemploy/pop,uempmed,data=economics,geom='path',color=year(date))
+
+# 2.6 分面
+
+qplot(carat,data=diamonds,facets=color~.,geom='histogram',binwidth=0.1,xlim=c(0,3))
 
 
 
 
+qplot(carat,..density..,data=diamonds,facets=color~.,geom='histogram',binwidth=0.1,xlim=c(0,3))
 
+# 2.7 其他选项
+# qplot的一些其他参数
+# xlim,ylim设置横轴和纵轴的显示区间，他们的都是长度为2的数值向量
+# log说明哪个坐标轴取对数
+# main设置图形的主标题，是一个字符串
+# xlab,ylab设置横轴和纵轴的标签文字
 
+qplot(
+  carat,price,data=dsmall,
+  xlab='price($)',ylab='weight(carat)',
+  main='price~weight ralationship'
+  )
 
+qplot(
+  carat,price/carat,data=dsmall,
+  ylab=expression(frac(price,carat)),xlab='weight(carat)',
+  main='small diamonds',
+  xlim=c(0.2,1)
+)
 
+qplot(carat,price,data=dsmall,log='xy')
 
 
 
